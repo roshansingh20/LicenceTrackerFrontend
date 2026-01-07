@@ -1,0 +1,14 @@
+@reference "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.nav {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav:hover {
+  background: rgba(255,255,255,0.2);
+}
