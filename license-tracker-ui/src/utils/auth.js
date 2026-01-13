@@ -1,29 +1,43 @@
-/* ================= AUTH HELPERS ================= */
+const TOKEN_KEY = "token";
 
-/**
- * Check if user is logged in
- * (JWT present in localStorage)
- */
-export const isLoggedIn = () => {
-  return Boolean(localStorage.getItem("token"));
-};
+/* ================= TOKEN ================= */
 
-/**
- * Get logged-in user role
- */
-export const getUserRole = () => {
-  return localStorage.getItem("role"); // ADMIN, NETWORK_ADMIN, etc
-};
+export function setToken(token) {
+  localStorage.setItem(TOKEN_KEY, token);
+}
 
-/**
- * Logout user safely
- * Clears all auth-related data
- */
-export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
-  localStorage.removeItem("user");
+export function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
 
-  // Hard redirect to clear React state
+export function clearAuth() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+/* ================= AUTH ================= */
+
+export function isAuthenticated() {
+  return !!getToken();
+}
+
+/* ================= ROLE ================= */
+
+export function getUserRole() {
+  const token = getToken();
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.role;
+  } catch (e) {
+    console.error("Invalid token");
+    return null;
+  }
+}
+
+/* ================= LOGOUT ================= */
+
+export function logout() {
+  clearAuth();
   window.location.href = "/login";
-};
+}

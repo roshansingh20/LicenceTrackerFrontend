@@ -31,7 +31,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* ================= PROTECTED APP ================= */}
+        {/* ================= PROTECTED ================= */}
         <Route
           element={
             <ProtectedRoute>
@@ -39,139 +39,93 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          {/* Dashboard – ALL ROLES */}
           <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* Devices */}
-          <Route
-            path="/devices"
-            element={
-              <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","OPERATION_MANAGER"]}>
-                <Devices />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/devices" element={
+            <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","OPERATION_MANAGER"]}>
+              <Devices />
+            </ProtectedRoute>
+          } />
 
-          <Route
-            path="/devices/:deviceId/details"
-            element={
-              <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","OPERATION_MANAGER"]}>
-                <DeviceDetails />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/devices/:deviceId/details" element={
+            <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","OPERATION_MANAGER"]}>
+              <DeviceDetails />
+            </ProtectedRoute>
+          } />
 
-          {/* Licenses (READ) */}
-          <Route
-            path="/licenses"
-            element={
-              <ProtectedRoute roles={["ADMIN","PROCUREMENT","COMPLIANCE"]}>
-                <Licenses />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/licenses" element={
+            <ProtectedRoute roles={["ADMIN","PROCUREMENT","COMPLIANCE"]}>
+              <Licenses />
+            </ProtectedRoute>
+          } />
 
-          {/* Add License */}
-          <Route
-            path="/licenses/add"
-            element={
-              <ProtectedRoute roles={["ADMIN","PROCUREMENT"]}>
-                <AddLicense />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/licenses/add" element={
+            <ProtectedRoute roles={["ADMIN","PROCUREMENT"]}>
+              <AddLicense />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/users" element={
+            <ProtectedRoute roles={["ADMIN"]}>
+              <UserManagement />
+            </ProtectedRoute>
+          } />
 <Route
-  path="/users"
-  element={
-    <ProtectedRoute roles={["ADMIN"]}>
-      <UserManagement />
-    </ProtectedRoute>
-  }
+  path="/licenses/:licenseKey/devices"
+  element={<AssignedDevices />}
 />
 
-          {/* License Utilization */}
-          <Route
-            path="/licenses/utilization"
-            element={
-              <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
-                <LicenseUtilization />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/licenses/utilization" element={
+            <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
+              <LicenseUtilization />
+            </ProtectedRoute>
+          } />
 
-          {/* Assigned Devices per License */}
-          <Route
-            path="/licenses/:licenseKey/devices"
-            element={
-              <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
-                <AssignedDevices />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/licenses/:licenseKey/devices" element={
+            <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
+              <AssignedDevices />
+            </ProtectedRoute>
+          } />
 
-          {/* Assign License */}
-          <Route
-            path="/assign"
-            element={
-              <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN"]}>
-                <AssignLicense />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/assign" element={
+            <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN"]}>
+              <AssignLicense />
+            </ProtectedRoute>
+          } />
 
-          {/* Global Assignments */}
-          <Route
-            path="/assignments"
-            element={
-              <ProtectedRoute roles={["ADMIN"]}>
-                <AssignedLicenses />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/assignments" element={
+            <ProtectedRoute roles={["ADMIN"]}>
+              <AssignedLicenses />
+            </ProtectedRoute>
+          } />
 
-          {/* Alerts */}
-          <Route
-            path="/alerts"
-            element={
-              <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
-                <Alerts />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/alerts" element={
+            <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
+              <Alerts />
+            </ProtectedRoute>
+          } />
 
-          {/* Reports */}
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
-                <Reports />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/reports" element={
+            <ProtectedRoute roles={["ADMIN","COMPLIANCE"]}>
+              <Reports />
+            </ProtectedRoute>
+          } />
 
-          {/* Audit */}
-          <Route
-            path="/audit"
-            element={
-              <ProtectedRoute roles={["ADMIN","AUDITOR"]}>
-                <Audit />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/audit" element={
+            <ProtectedRoute roles={["ADMIN","AUDITOR"]}>
+              <Audit />
+            </ProtectedRoute>
+          } />
 
-          {/* Software Lifecycle */}
-          <Route
-            path="/lifecycle"
-            element={
-              <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","NETWORK_ENGINEER"]}>
-                <Lifecycle />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/lifecycle" element={
+            <ProtectedRoute roles={["ADMIN","NETWORK_ADMIN","NETWORK_ENGINEER"]}>
+              <Lifecycle />
+            </ProtectedRoute>
+          } />
         </Route>
 
         {/* ================= FALLBACK ================= */}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
 
       </Routes>
     </BrowserRouter>

@@ -17,7 +17,9 @@ export default function AssignedDevices() {
   async function loadData() {
     try {
       const [devicesRes, utilRes] = await Promise.all([
-        axiosInstance.get(`/licenses/${licenseKey}/devices`),
+//         axiosInstance.get(`/licenses/${licenseKey}/devices`),
+axiosInstance.get(`/assignments/license/${licenseKey}`),
+
         axiosInstance.get(`/utilization/${licenseKey}`),
       ]);
 

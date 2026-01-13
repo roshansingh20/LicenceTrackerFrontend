@@ -7,7 +7,15 @@ const NAV_ITEMS = [
   {
     to: "/dashboard",
     label: "Dashboard",
-    roles: ["ADMIN", "NETWORK_ADMIN", "PROCUREMENT", "COMPLIANCE", "AUDITOR","OPERATION_MANAGER","NETWORK_ENGINEER"],
+    roles: [
+      "ADMIN",
+      "NETWORK_ADMIN",
+      "PROCUREMENT",
+      "COMPLIANCE",
+      "AUDITOR",
+      "OPERATION_MANAGER",
+      "NETWORK_ENGINEER",
+    ],
   },
   {
     to: "/devices",
@@ -17,14 +25,13 @@ const NAV_ITEMS = [
   {
     to: "/licenses",
     label: "Licenses",
-    roles: ["ADMIN", "PROCUREMENT","COMPLIANCE"],
+    roles: ["ADMIN", "PROCUREMENT", "COMPLIANCE"],
   },
-{
-  to: "/users",
-  label: "User Management",
-  roles: ["ADMIN"],
-},
-
+  {
+    to: "/users",
+    label: "User Management",
+    roles: ["ADMIN"],
+  },
   {
     to: "/assign",
     label: "Assign License",
@@ -43,14 +50,13 @@ const NAV_ITEMS = [
   {
     to: "/reports",
     label: "Reports",
-    roles: ["ADMIN", "COMPLIANCE","AUDITOR"],
+    roles: ["ADMIN", "COMPLIANCE", "AUDITOR"],
   },
-{
-  to: "/licenses/utilization",
-  label: "License Utilization",
-  roles: ["ADMIN", "COMPLIANCE", "PROCUREMENT"]
-},
-
+  {
+    to: "/licenses/utilization",
+    label: "License Utilization",
+    roles: ["ADMIN", "COMPLIANCE", "PROCUREMENT"],
+  },
   {
     to: "/audit",
     label: "Audit Logs",
@@ -63,11 +69,12 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 text-white flex flex-col">
-
       {/* HEADER */}
       <div className="p-6 border-b border-white/20">
         <h1 className="text-xl font-bold">License Tracker</h1>
-        <p className="text-sm opacity-80 mt-1">{role}</p>
+        <p className="text-sm opacity-80 mt-1">
+          {role ? `Logged in as ${role}` : ""}
+        </p>
       </div>
 
       {/* NAVIGATION */}
@@ -77,7 +84,7 @@ export default function Sidebar() {
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `block px-4 py-2 rounded transition cursor-pointer ${
+              `block px-4 py-2 rounded transition ${
                 isActive
                   ? "bg-white text-indigo-700 font-semibold shadow"
                   : "hover:bg-white/20"

@@ -1,63 +1,129 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ForgotPassword() {
-  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    // UI-only (backend can be added later)
-    setMessage(
-      "If this email exists, password reset instructions will be sent."
-    );
+  const API = "http://localhost:5500/api/auth";
+
+  async function sendOtp() {
+    setLoading(true);
+    try {
+      await axios.post(`${API}/forgot-password`, { email });
+      setMsg("OTP sent to your registered email");
+      setStep(2);
+    } catch (err) {
+      setMsg(err.response?.data || "Email not found");
+    }
+    setLoading(false);
+  }
+
+  async function verifyOtp() {
+    setLoading(true);
+    try {
+      await axios.post(`${API}/verify-otp`, { email, otp });
+      setMsg("OTP verified. Set new password.");
+      setStep(3);
+    } catch (err) {
+      setMsg(err.response?.data || "Invalid OTP");
+    }
+    setLoading(false);
+  }
+
+  async function resetPassword() {
+    setLoading(true);
+    try {
+      await axios.post(`${API}/reset-password`, {
+        email,
+        otp,
+        newPassword,
+      });
+      setMsg("Password reset successful. You can now login.");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } catch (err) {
+      setMsg(err.response?.data || "Password reset failed");
+    }
+    setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
-
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-[420px]">
+        <h2 className="text-2xl font-bold text-center mb-6">
           Forgot Password
-        </h1>
+        </h2>
 
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Enter your registered email
-        </p>
+        {msg && <p className="text-center mb-4 text-sm text-indigo-700">{msg}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            required
-            placeholder="admin@prodapt.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
+        {/* STEP 1 */}
+        {step === 1 && (
+          <>
+            <input
+              type="email"
+              placeholder="Enter registered email"
+              className="border p-3 w-full rounded mb-4"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700"
-          >
-            Send Reset Link
-          </button>
-        </form>
-
-        {message && (
-          <p className="text-green-600 text-sm text-center mt-4">
-            {message}
-          </p>
+            <button
+              onClick={sendOtp}
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+            >
+              Send OTP
+            </button>
+          </>
         )}
 
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => navigate("/login")}
-            className="text-sm text-indigo-600 hover:underline"
-          >
-            Back to Login
-          </button>
-        </div>
+        {/* STEP 2 */}
+        {step === 2 && (
+          <>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              className="border p-3 w-full rounded mb-4"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+
+            <button
+              onClick={verifyOtp}
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded"
+            >
+              Verify OTP
+            </button>
+          </>
+        )}
+
+        {/* STEP 3 */}
+        {step === 3 && (
+          <>
+            <input
+              type="password"
+              placeholder="Enter new password"
+              className="border p-3 w-full rounded mb-4"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+
+            <button
+              onClick={resetPassword}
+              disabled={loading}
+              className="w-full bg-green-600 text-white py-2 rounded"
+            >
+              Reset Password
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
